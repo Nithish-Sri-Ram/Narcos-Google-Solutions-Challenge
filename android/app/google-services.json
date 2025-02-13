@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "791318946064",
+    "project_id": "drug-discovery-app",
+    "storage_bucket": "drug-discovery-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791318946064:android:38d87ad2ccb9090ce48595",
+        "android_client_info": {
+          "package_name": "com.example.drug_discovery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpIVigbj4D0T88AytyFkgH3-saun81BoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

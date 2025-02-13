@@ -22,9 +22,9 @@ class LoginScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {},
-              child: const Text(
+              child: Text(
                 'Skip',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold,color: Pallete.blueColor),
               ),
             )
           ],
@@ -35,7 +35,7 @@ class LoginScreen extends StatelessWidget {
               height: 30,
             ),
             const Text(
-              'Dive into anything',
+              'Cure Seeking Minds',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
