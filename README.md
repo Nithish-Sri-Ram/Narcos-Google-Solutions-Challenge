@@ -16,3 +16,23 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 Got the png assets from this website - https://www.pngegg.com/
+
+
+
+
+
+
+// The below is as instruction to myself to delete old keystore and generate a new one and generate a sha fingerprint and which can be used in the firebase console 
+
+//Delete the existing - corrupted one
+del "%USERPROFILE%\.android\debug.keystore"
+
+// List and see none exists
+dir "%USERPROFILE%\.android\debug.keystore"
+
+// Creating a new one
+keytool -genkeypair -v -keystore "%USERPROFILE%\.android\debug.keystore" -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000
+
+// Generating a sha keyword
+keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
+
