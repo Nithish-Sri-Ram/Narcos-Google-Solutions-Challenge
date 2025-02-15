@@ -1,13 +1,17 @@
+import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/core/common/sign_in_button.dart';
 import 'package:drug_discovery/core/constants/constants.dart';
+import 'package:drug_discovery/features/controller/auth_controller.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final isLoading = ref.watch(authControllerProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -29,7 +33,7 @@ class LoginScreen extends StatelessWidget {
             )
           ],
         ),
-        body: Column(
+        body: isLoading?const Loader(): Column(
           children: [
             const SizedBox(
               height: 30,
