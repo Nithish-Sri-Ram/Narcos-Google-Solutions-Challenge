@@ -17,6 +17,9 @@ samples, guidance on mobile development, and a full API reference.
 
 Got the png assets from this website - https://www.pngegg.com/
 
+got the sample avatar from here - https://iconduck.com/icons/22525/user-astronaut
+
+
 
 
 
