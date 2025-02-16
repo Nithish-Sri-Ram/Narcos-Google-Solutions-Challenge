@@ -1,6 +1,5 @@
 import 'package:drug_discovery/core/common/error_text.dart';
 import 'package:drug_discovery/core/common/loader.dart';
-import 'package:drug_discovery/core/constants/constants.dart';
 import 'package:drug_discovery/features/community/controller/community_controller.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:drug_discovery/theme/pallete.dart';
@@ -38,7 +37,7 @@ class CommunityListDrawer extends ConsumerWidget {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Pallete.whiteColor,
-                            backgroundImage: AssetImage(Constants.avatarDefault),
+                            backgroundImage: NetworkImage(community.avatar),
                           ),
                           title: Text(community.name),
                           onTap: () => navigateToCommunity(context, community),

@@ -31,7 +31,7 @@ class CommunityScreen extends ConsumerWidget {
                     flexibleSpace: Stack(
                       children: [
                         Positioned.fill(
-                          child: Image.asset(
+                          child: Image.network(
                             Constants.bannerDefault,
                             fit: BoxFit.cover,
                           ),
@@ -50,7 +50,7 @@ class CommunityScreen extends ConsumerWidget {
                               radius: 35,
                               backgroundColor: Colors.white,
                               backgroundImage:
-                                  AssetImage(Constants.avatarDefault),
+                                  NetworkImage(community.avatar),
                             ),
                           ),
                           const SizedBox(height: 5),
