@@ -32,7 +32,7 @@ class CommunityScreen extends ConsumerWidget {
                       children: [
                         Positioned.fill(
                           child: Image.network(
-                            Constants.bannerDefault,
+                            community.banner,
                             fit: BoxFit.cover,
                           ),
                         ),

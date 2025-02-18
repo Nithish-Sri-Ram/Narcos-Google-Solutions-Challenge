@@ -16,54 +16,21 @@ class StorageRepository {
   StorageRepository({required FirebaseStorage firebaseStorage})
       : _firebaseStorage = firebaseStorage;
 
-  // FutureEither<String> storeFile({
-  //   required String path,
-  //   required String id,
-  //   required File? file,
-  // }) async {
-  //   try {
-  //     // users/banner/123
-  //     final ref = _firebaseStorage.ref().child(path).child(id);
-
-  //     UploadTask uploadTask = ref.putFile(file!);
-
-  //     final snapShot = await uploadTask;
-
-  //     return right(await snapShot.ref.getDownloadURL());
-  //   } catch (e) {
-  //     return left(Failure(e.toString()));
-  //   }
-  // }
   FutureEither<String> storeFile({
     required String path,
     required String id,
     required File? file,
   }) async {
     try {
-      if (file == null) {
-        return left(Failure("File is null, cannot upload."));
-      }
+      // users/banner/123
+      final ref = _firebaseStorage.ref().child(path).child(id);
 
-      final ref =
-          _firebaseStorage.ref().child("$path/$id"); // Ensure correct path
+      UploadTask uploadTask = ref.putFile(file!);
 
-      print("Uploading file to: $path/$id"); // Debugging log
+      final snapShot = await uploadTask;
 
-      UploadTask uploadTask = ref.putFile(file);
-
-      TaskSnapshot snapShot = await uploadTask.whenComplete(() => {});
-
-      if (snapShot.state == TaskState.error) {
-        return left(Failure("Upload failed, please try again."));
-      }
-
-      final downloadUrl = await snapShot.ref.getDownloadURL();
-
-      print("File uploaded successfully. URL: $downloadUrl"); // Debugging log
-
-      return right(downloadUrl);
+      return right(await snapShot.ref.getDownloadURL());
     } catch (e) {
-      print("Upload error: $e"); // Debugging log
       return left(Failure(e.toString()));
     }
   }

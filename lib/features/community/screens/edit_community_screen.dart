@@ -52,6 +52,8 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(communityControllerProvider);
+
     return ref.watch(getCommunitiesByNameProvider(widget.name)).when(
           data: (community) => Scaffold(
             backgroundColor: Pallete.darkModeAppTheme.scaffoldBackgroundColor,
@@ -66,7 +68,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                 )
               ],
             ),
-            body: Padding(
+            body: isLoading? const Loader(): Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
