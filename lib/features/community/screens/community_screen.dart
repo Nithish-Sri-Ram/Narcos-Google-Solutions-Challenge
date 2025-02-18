@@ -3,6 +3,7 @@ import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/core/constants/constants.dart';
 import 'package:drug_discovery/features/community/controller/community_controller.dart';
 import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/models/community_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -11,8 +12,14 @@ class CommunityScreen extends ConsumerWidget {
   final String name;
   const CommunityScreen({required this.name, super.key});
 
-  void navigateToModTools(BuildContext context){
+  void navigateToModTools(BuildContext context) {
     Routemaster.of(context).push('/mod-tools/$name');
+  }
+
+  void joinCommunity(WidgetRef ref, Community community, BuildContext context) {
+    ref
+        .read(communityControllerProvider.notifier)
+        .joinCommunity(community, context);
   }
 
   @override
@@ -49,8 +56,7 @@ class CommunityScreen extends ConsumerWidget {
                             child: CircleAvatar(
                               radius: 35,
                               backgroundColor: Colors.white,
-                              backgroundImage:
-                                  NetworkImage(community.avatar),
+                              backgroundImage: NetworkImage(community.avatar),
                             ),
                           ),
                           const SizedBox(height: 5),
@@ -64,7 +70,8 @@ class CommunityScreen extends ConsumerWidget {
                               ),
                               community.mods.contains(user.uid)
                                   ? OutlinedButton(
-                                      onPressed: () => navigateToModTools(context),
+                                      onPressed: () =>
+                                          navigateToModTools(context),
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -76,7 +83,7 @@ class CommunityScreen extends ConsumerWidget {
                                       child: Text('Mod Tools'),
                                     )
                                   : OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () => joinCommunity(ref, community, context),
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:

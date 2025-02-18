@@ -1,6 +1,7 @@
 // logged out route
 // logged in route
 
+import 'package:drug_discovery/features/community/screens/add_mods_screen.dart';
 import 'package:drug_discovery/features/community/screens/community_screen.dart';
 import 'package:drug_discovery/features/community/screens/create_community_screen.dart';
 import 'package:drug_discovery/features/community/screens/edit_community_screen.dart';
@@ -31,6 +32,11 @@ final loggedInRoute = RouteMap(
         ),
     '/edit-community/:name': (routeData) => MaterialPage(
           child: EditCommunityScreen(
+            name: routeData.pathParameters['name']!,
+          ),
+        ),
+    '/add-mods/:name': (routeData) => MaterialPage(
+          child: AddModsScreen(
             name: routeData.pathParameters['name']!,
           ),
         ),

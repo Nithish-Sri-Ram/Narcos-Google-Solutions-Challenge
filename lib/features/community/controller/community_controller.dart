@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:drug_discovery/core/constants/constants.dart';
+import 'package:drug_discovery/core/failure.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
 import 'package:drug_discovery/core/utils.dart';
 import 'package:drug_discovery/features/community/repository/community_repository.dart';
@@ -7,6 +8,7 @@ import 'package:drug_discovery/features/repository/auth_repository.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:routemaster/routemaster.dart';
 
 final userCommunitiesProvider = StreamProvider((ref) {
@@ -32,7 +34,7 @@ final getCommunitiesByNameProvider = StreamProvider.family((ref, String name) {
       .getCommunityByName(name);
 });
 
-final searchCommunityProvider = StreamProvider.family((ref,String query){
+final searchCommunityProvider = StreamProvider.family((ref, String query) {
   return ref.watch(communityControllerProvider.notifier).searchCommunity(query);
 });
 
@@ -69,6 +71,25 @@ class CommunityController extends StateNotifier<bool> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Community created')));
       Routemaster.of(context).pop();
+    });
+  }
+
+  void joinCommunity(Community community, BuildContext context) async {
+    final user = _ref.read(userProvider)!;
+
+    Either<Failure, void> res;
+    if (community.members.contains(user.uid)) {
+      res = await _communityRepository.leaveCommunity(community.name, user.uid);
+    } else {
+      res = await _communityRepository.joinCommunity(community.name, user.uid);
+    }
+
+    res.fold((l) => showSnackBar(context, l.message), (r) {
+      if (community.members.contains(user.uid)) {
+        showSnackBar(context, 'Community left successfully');
+      } else {
+        showSnackBar(context, 'Community joined successfully');
+      }
     });
   }
 
@@ -118,7 +139,14 @@ class CommunityController extends StateNotifier<bool> {
         (r) => Routemaster.of(context).pop());
   }
 
-  Stream<List<Community>> searchCommunity(String query){
+  Stream<List<Community>> searchCommunity(String query) {
     return _communityRepository.SearchCommunity(query);
+  }
+
+  void addMods(
+      String communityName, List<String> uids, BuildContext context) async {
+    final res = await _communityRepository.addMods(communityName, uids);
+    res.fold((l) => showSnackBar(context, l.message),
+        (r) => Routemaster.of(context).pop());
   }
 }
