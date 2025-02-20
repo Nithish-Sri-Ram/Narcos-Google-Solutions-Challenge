@@ -8,6 +8,7 @@ import 'package:drug_discovery/features/community/screens/edit_community_screen.
 import 'package:drug_discovery/features/community/screens/mod_tools_screen.dart';
 import 'package:drug_discovery/features/home/screens/home_screen.dart';
 import 'package:drug_discovery/features/screens/login_screen.dart';
+import 'package:drug_discovery/features/user_profile/screens/edit_profile_screen.dart';
 import 'package:drug_discovery/features/user_profile/screens/user_profile_screen.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,11 @@ final loggedInRoute = RouteMap(
         ),
     '/u/:uid': (routeData) => MaterialPage(
           child: UserProfileScreen(
+            uid: routeData.pathParameters['uid']!,
+          ),
+        ),
+    '/edit-profile/:uid': (routeData) => MaterialPage(
+          child: EditProfileScreen(
             uid: routeData.pathParameters['uid']!,
           ),
         ),

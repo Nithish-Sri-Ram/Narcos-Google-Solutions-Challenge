@@ -30,6 +30,7 @@ class Pallete {
       backgroundColor: drawerColor,
     ),
     primaryColor: redColor,
+    focusColor: whiteColor,
     // backgroundColor: drawerColor, // will be used as alternative background color
   );
 
@@ -47,6 +48,7 @@ class Pallete {
       backgroundColor: whiteColor,
     ),
     primaryColor: redColor,
+    focusColor: blackColor,
     // backgroundColor: whiteColor,
   );
 }
