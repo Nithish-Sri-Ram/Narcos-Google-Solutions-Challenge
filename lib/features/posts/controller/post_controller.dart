@@ -11,17 +11,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 
-final postControllerProvider =
-    StateNotifierProvider<PostController, bool>(
+final postControllerProvider = StateNotifierProvider<PostController, bool>(
   (ref) {
     final postRepository = ref.watch(postRepositoryProvider);
     final storageRepository = ref.watch(storageRepositoryProvider);
     return PostController(
-        postRepository: postRepository,
-        ref: ref,
-        storageRepository: storageRepository);
+      postRepository: postRepository,
+      ref: ref,
+      storageRepository: storageRepository,
+    );
   },
 );
+
+final userPostsProvider =
+    StreamProvider.family((ref, List<Community> communities) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.fetchUserPosts(communities);
+});
 
 class PostController extends StateNotifier<bool> {
   final PostRepository _postRepository;
@@ -153,5 +159,12 @@ class PostController extends StateNotifier<bool> {
         );
       },
     );
+  }
+
+  Stream<List<Post>> fetchUserPosts(List<Community> communities) {
+    if (communities.isNotEmpty) {
+      return _postRepository.fetchUserPosts(communities);
+    }
+    return Stream.value([]);
   }
 }

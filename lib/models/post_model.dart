@@ -87,24 +87,21 @@ class Post {
 
   factory Post.fromMap(Map<String, dynamic> map) {
     return Post(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      link: map['link'] != null ? map['link'] as String : null,
-      description:
-          map['description'] != null ? map['description'] as String : null,
-      communityName: map['communityName'] as String,
-      communityProfilePic: map['communityProfilePic'] as String,
-      upvotes: List<String>.from((map['upvotes'] as List<String>)),
-      downvotes: List<String>.from((map['downvotes'] as List<String>)),
-      commentCount: map['commentCount'] as int,
-      username: map['username'] as String,
-      uid: map['uid'] as String,
-      type: map['type'] as String,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      awards: List<String>.from(
-        (map['awards'] as List<String>),
-      ),
-    );
+        id: map['id'] as String,
+        title: map['title'] as String,
+        link: map['link'] != null ? map['link'] as String : null,
+        description:
+            map['description'] != null ? map['description'] as String : null,
+        communityName: map['communityName'] as String,
+        communityProfilePic: map['communityProfilePic'] as String,
+        upvotes: List<String>.from(map['upvotes'] ?? []),
+        downvotes: List<String>.from(map['downvotes'] ?? []),
+        commentCount: map['commentCount'] as int,
+        username: map['username'] as String,
+        uid: map['uid'] as String,
+        type: map['type'] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        awards: List<String>.from(map['awards'] ?? []));
   }
 
   @override
