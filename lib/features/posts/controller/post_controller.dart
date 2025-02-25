@@ -4,6 +4,7 @@ import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
 import 'package:drug_discovery/core/utils.dart';
 import 'package:drug_discovery/features/posts/repository/post_repository.dart';
 import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/models/comment_model.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:drug_discovery/models/post_model.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,16 @@ final userPostsProvider =
     StreamProvider.family((ref, List<Community> communities) {
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.fetchUserPosts(communities);
+});
+
+final getPostByIdProvider = StreamProvider.family((ref, String postId) {
+  final postContrtoller = ref.watch(postControllerProvider.notifier);
+  return postContrtoller.getPostById(postId);
+});
+
+final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
+  final postContrtoller = ref.watch(postControllerProvider.notifier);
+  return postContrtoller.fetchPostComments(postId);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -179,8 +190,35 @@ class PostController extends StateNotifier<bool> {
     _postRepository.upvote(post, uid);
   }
 
-    void downvote(Post post) async {
+  void downvote(Post post) async {
     final uid = _ref.read(userProvider)!.uid;
     _postRepository.downvote(post, uid);
+  }
+
+  Stream<Post> getPostById(String postId) {
+    return _postRepository.getPostById(postId);
+  }
+
+  void addComment({
+    required BuildContext context,
+    required String text,
+    required Post post,
+  }) async {
+    final user = _ref.read(userProvider)!;
+    String commentId = Uuid().v1();
+    Comment comment = Comment(
+      id: commentId,
+      text: text,
+      createdAt: DateTime.now(),
+      postId: post.id,
+      userName: user.name,
+      profilePic: user.profilePic,
+    );
+    final res = await _postRepository.addComment(comment);
+    res.fold((l) => showSnackBar(context, l.message), (r) => null);
+  }
+
+  Stream<List<Comment>> fetchPostComments(String postId) {
+    return _postRepository.getCommentsOfPost(postId);
   }
 }
