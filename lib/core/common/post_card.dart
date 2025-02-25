@@ -1,5 +1,6 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:drug_discovery/core/constants/constants.dart';
+import 'package:drug_discovery/features/posts/controller/post_controller.dart';
 import 'package:drug_discovery/features/repository/auth_repository.dart';
 import 'package:drug_discovery/models/post_model.dart';
 import 'package:drug_discovery/theme/pallete.dart';
@@ -12,6 +13,10 @@ class PostCard extends ConsumerWidget {
     super.key,
     required this.post,
   });
+
+  void deletePost(WidgetRef ref, BuildContext context) async {
+    ref.read(postControllerProvider.notifier).deletePost(post, context);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +77,7 @@ class PostCard extends ConsumerWidget {
                           ),
                           if (post.uid == user.uid)
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () => deletePost(ref, context),
                               icon: Icon(
                                 Icons.delete,
                                 color: Pallete.redColor,
@@ -100,8 +105,9 @@ class PostCard extends ConsumerWidget {
                           ),
                         ),
                       if (isTypeLink)
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.35,
+                        Container(
+                          height: 150,
+                          padding: EdgeInsets.symmetric(),
                           width: double.infinity,
                           child: AnyLinkPreview(
                             displayDirection: UIDirection.uiDirectionHorizontal,
