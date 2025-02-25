@@ -3,11 +3,12 @@ import 'package:drug_discovery/core/constants/firebase_constants.dart';
 import 'package:drug_discovery/core/failure.dart';
 import 'package:drug_discovery/core/providers/firebase_providers.dart';
 import 'package:drug_discovery/core/type_defs.dart';
+import 'package:drug_discovery/models/post_model.dart';
 import 'package:drug_discovery/models/user_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
-final userProfileRepositoryProvider = Provider((ref){
+final userProfileRepositoryProvider = Provider((ref) {
   return UserProfileRepository(firestore: ref.watch(firestoreProvider));
 });
 
@@ -19,6 +20,8 @@ class UserProfileRepository {
 
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
 
   FutureVoid editProfile(UserModel user) async {
     try {
@@ -28,5 +31,15 @@ class UserProfileRepository {
     } catch (e) {
       return left(Failure(e.toString()));
     }
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _posts
+        .where('uid', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
+            .toList());
   }
 }

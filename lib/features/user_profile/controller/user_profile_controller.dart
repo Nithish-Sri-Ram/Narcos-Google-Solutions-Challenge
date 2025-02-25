@@ -4,6 +4,7 @@ import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
 import 'package:drug_discovery/core/utils.dart';
 import 'package:drug_discovery/features/repository/auth_repository.dart';
 import 'package:drug_discovery/features/user_profile/repository/user_profile_repository.dart';
+import 'package:drug_discovery/models/post_model.dart';
 import 'package:drug_discovery/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,10 @@ final userProfileControllerProvider =
     ref: ref,
     storageRepository: storageRepository,
   );
+});
+
+final getUserPostsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userProfileControllerProvider.notifier).getUserPosts(uid);
 });
 
 class UserProfileController extends StateNotifier<bool> {
@@ -74,5 +79,9 @@ class UserProfileController extends StateNotifier<bool> {
         Routemaster.of(context).pop();
       },
     );
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _userProfileRepository.getUserPosts(uid);
   }
 }

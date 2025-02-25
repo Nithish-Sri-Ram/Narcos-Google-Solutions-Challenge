@@ -4,6 +4,7 @@ import 'package:drug_discovery/core/failure.dart';
 import 'package:drug_discovery/core/providers/firebase_providers.dart';
 import 'package:drug_discovery/core/type_defs.dart';
 import 'package:drug_discovery/models/community_model.dart';
+import 'package:drug_discovery/models/post_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -118,6 +119,18 @@ class CommunityRepository {
     }
   }
 
+  Stream<List<Post>> getCommunityPosts(String name) {
+    return _posts
+        .where('communityName', isEqualTo: name)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
+            .toList());
+  }
+
   CollectionReference get _communities =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
 }
