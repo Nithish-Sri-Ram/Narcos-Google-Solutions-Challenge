@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drug_discovery/core/constants/firebase_constants.dart';
+import 'package:drug_discovery/core/enums/enums.dart';
 import 'package:drug_discovery/core/failure.dart';
 import 'package:drug_discovery/core/providers/firebase_providers.dart';
 import 'package:drug_discovery/core/type_defs.dart';
@@ -41,5 +42,21 @@ class UserProfileRepository {
         .map((event) => event.docs
             .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
             .toList());
+  }
+
+  FutureVoid updateUserKarma(UserModel user) async {
+    try {
+      return right(
+        _posts.doc(user.uid).update(
+          {
+            'karma': user.karma,
+          },
+        ),
+      );
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 }

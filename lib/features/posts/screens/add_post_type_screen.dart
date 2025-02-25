@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:drug_discovery/core/common/error_text.dart';
 import 'package:drug_discovery/core/common/loader.dart';
@@ -8,8 +7,6 @@ import 'package:drug_discovery/features/community/controller/community_controlle
 import 'package:drug_discovery/features/posts/controller/post_controller.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:drug_discovery/theme/pallete.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

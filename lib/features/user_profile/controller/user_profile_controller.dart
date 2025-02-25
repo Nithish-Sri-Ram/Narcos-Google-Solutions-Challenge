@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:drug_discovery/core/enums/enums.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
 import 'package:drug_discovery/core/utils.dart';
 import 'package:drug_discovery/features/repository/auth_repository.dart';
@@ -83,5 +84,14 @@ class UserProfileController extends StateNotifier<bool> {
 
   Stream<List<Post>> getUserPosts(String uid) {
     return _userProfileRepository.getUserPosts(uid);
+  }
+
+  void updateUserKarma(UserKarma karma) async {
+    UserModel user = _ref.read(userProvider)!;
+    user = user.copyWith(karma: user.karma + karma.karma);
+
+    final res = await _userProfileRepository.updateUserKarma(user);
+    res.fold((l) => null,
+        (r) => _ref.read(userProvider.notifier).update((state) => user));
   }
 }
