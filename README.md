@@ -20,7 +20,7 @@ Got the png assets from this website - https://www.pngegg.com/
 got the sample avatar from here - https://iconduck.com/icons/22525/user-astronaut
 
 
-
+awareds png : I got it from here - https://www.flaticon.com/free-stickers/award
 
 
 

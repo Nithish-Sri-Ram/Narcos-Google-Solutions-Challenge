@@ -1,7 +1,7 @@
 import 'package:drug_discovery/core/common/error_text.dart';
 import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/features/auth/controller/auth_controller.dart';
-import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/models/user_model.dart';
 import 'package:drug_discovery/router.dart';
 import 'package:drug_discovery/theme/pallete.dart';

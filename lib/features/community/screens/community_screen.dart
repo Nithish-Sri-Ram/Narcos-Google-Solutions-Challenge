@@ -2,7 +2,7 @@ import 'package:drug_discovery/core/common/error_text.dart';
 import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/core/common/post_card.dart';
 import 'package:drug_discovery/features/community/controller/community_controller.dart';
-import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

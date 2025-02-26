@@ -2,7 +2,7 @@ import 'package:drug_discovery/core/constants/constants.dart';
 import 'package:drug_discovery/features/home/delegates/search_community_delegate.dart';
 import 'package:drug_discovery/features/home/drawers/community_list_drawer.dart';
 import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
-import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:drug_discovery/core/enums/enums.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
 import 'package:drug_discovery/core/utils.dart';
-import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/features/user_profile/repository/user_profile_repository.dart';
 import 'package:drug_discovery/models/post_model.dart';
 import 'package:drug_discovery/models/user_model.dart';

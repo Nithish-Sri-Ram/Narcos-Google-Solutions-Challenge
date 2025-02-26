@@ -1,5 +1,5 @@
 import 'package:drug_discovery/core/utils.dart';
-import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

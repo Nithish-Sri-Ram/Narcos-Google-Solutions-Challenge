@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final userProvider = StateProvider<UserModel?>((ref)=>null);
+final userProvider = StateProvider<UserModel?>((ref) => null);
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
@@ -53,7 +53,7 @@ class AuthRepository {
           await _auth.signInWithCredential(credential);
 
       print(userCredential.user?.email);
-      
+
       UserModel userModel;
 
       if (userCredential.additionalUserInfo!.isNewUser) {
@@ -64,9 +64,18 @@ class AuthRepository {
           uid: userCredential.user!.uid,
           isAuthenticated: true,
           karma: 0,
-          awards: [],
+          awards: [
+            'awesomeAns',
+            'gold',
+            'platinum',
+            'helpful',
+            'plusone',
+            'rocket',
+            'thankyou',
+            'til',
+          ],
         );
-      await _users.doc(userModel.uid).set(userModel.toMap());
+        await _users.doc(userModel.uid).set(userModel.toMap());
       } else {
         userModel = await getUserData(userCredential.user!.uid).first;
       }
@@ -87,7 +96,7 @@ class AuthRepository {
     });
   }
 
-  void logOut()async{
+  void logOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }

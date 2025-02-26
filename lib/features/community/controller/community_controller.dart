@@ -4,7 +4,7 @@ import 'package:drug_discovery/core/failure.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
 import 'package:drug_discovery/core/utils.dart';
 import 'package:drug_discovery/features/community/repository/community_repository.dart';
-import 'package:drug_discovery/features/repository/auth_repository.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:drug_discovery/models/post_model.dart';
 import 'package:flutter/material.dart';
