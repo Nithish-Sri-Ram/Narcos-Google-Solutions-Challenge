@@ -33,7 +33,7 @@ class PostCard extends ConsumerWidget {
   void awardPost(WidgetRef ref, String award, BuildContext context) async {
     ref
         .read(postControllerProvider.notifier)
-        .awardPost(post: post, award: award, context: context!);
+        .awardPost(post: post, award: award, context: context);
   }
 
   void navigateToUser(BuildContext context) {

@@ -46,7 +46,7 @@ class UserProfileRepository {
   FutureVoid updateUserKarma(UserModel user) async {
     try {
       return right(
-        _posts.doc(user.uid).update(
+        _users.doc(user.uid).update(
           {
             'karma': user.karma,
           },
