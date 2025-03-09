@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:drug_discovery/core/constants/constants.dart';
 import 'package:drug_discovery/core/failure.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
@@ -112,26 +113,30 @@ class CommunityController extends StateNotifier<bool> {
     required File? profileFile,
     required File? bannerFile,
     required BuildContext context,
+    required Uint8List? profileWebFile,
+    required Uint8List? bannerWebFile,
   }) async {
     state = true;
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       // This will make sure that this will be stored in - /communities/profile/img_name
       final res = await _storageRepository.storeFile(
         path: 'communities/profile',
         id: community.name,
         file: profileFile,
+        webFile: profileWebFile,
       );
 
       res.fold((l) => showSnackBar(context, l.message),
           (r) => community = community.copyWith(avatar: r));
     }
 
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       // This will make sure that this will be stored in - /communities/banner/img_name
       final res = await _storageRepository.storeFile(
         path: 'communities/banner',
         id: community.name,
         file: bannerFile,
+        webFile: bannerWebFile,
       );
 
       res.fold((l) => showSnackBar(context, l.message),

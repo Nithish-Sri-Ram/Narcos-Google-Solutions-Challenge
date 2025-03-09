@@ -5,8 +5,10 @@ import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -56,6 +58,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
             icon: const Icon(Icons.search),
           ),
+          // if(kIsWeb)
+          IconButton(
+              onPressed: () {
+                Routemaster.of(context).push('/add-post');
+              },
+              icon: const Icon(Icons.add)),
           Builder(builder: (context) {
             return IconButton(
               icon: CircleAvatar(

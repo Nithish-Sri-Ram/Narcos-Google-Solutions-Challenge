@@ -5,6 +5,7 @@ import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/features/posts/controller/post_controller.dart';
 import 'package:drug_discovery/features/posts/widgets/comment_card.dart';
 import 'package:drug_discovery/models/post_model.dart';
+import 'package:drug_discovery/responsive/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,13 +46,15 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
                 children: [
                   PostCard(post: data),
                   if (!isGuest)
-                    TextField(
-                      onSubmitted: (val) => addComment(data),
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        hintText: 'What are your thoughts?',
-                        filled: true,
-                        border: InputBorder.none,
+                    Responsive(
+                      child: TextField(
+                        onSubmitted: (val) => addComment(data),
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                          hintText: 'What are your thoughts?',
+                          filled: true,
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   // Wrapping ListView.builder inside an Expanded widget

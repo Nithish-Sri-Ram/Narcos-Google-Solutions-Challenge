@@ -2,6 +2,7 @@ import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/core/common/sign_in_button.dart';
 import 'package:drug_discovery/core/constants/constants.dart';
 import 'package:drug_discovery/features/auth/controller/auth_controller.dart';
+import 'package:drug_discovery/responsive/responsive.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,7 +63,7 @@ class LoginScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const SignInButton(),
+                  Responsive(child: SignInButton()),
                 ],
               ),
       ),

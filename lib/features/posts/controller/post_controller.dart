@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:drug_discovery/core/enums/enums.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
@@ -139,11 +140,13 @@ class PostController extends StateNotifier<bool> {
     );
   }
 
-  void shareImagePost(
-      {required BuildContext context,
-      required String title,
-      required Community selectedCommunity,
-      required File? file}) async {
+  void shareImagePost({
+    required BuildContext context,
+    required String title,
+    required Community selectedCommunity,
+    required File? file,
+    required Uint8List? webFile,
+  }) async {
     state = true;
     String postId = Uuid().v1();
     final user = _ref.read(userProvider)!;
@@ -151,6 +154,7 @@ class PostController extends StateNotifier<bool> {
       path: 'posts/${selectedCommunity.name}',
       id: postId,
       file: file,
+      webFile: webFile,
     );
 
     imageRes.fold(

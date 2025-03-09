@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:drug_discovery/core/enums/enums.dart';
 import 'package:drug_discovery/core/providers/storage_repository_provider.dart';
@@ -43,27 +44,31 @@ class UserProfileController extends StateNotifier<bool> {
   void editUserProfile({
     required File? profileFile,
     required File? bannerFile,
+    required Uint8List? profileWebFile,
+    required Uint8List? bannerWebFile,
     required BuildContext context,
     required String name,
   }) async {
     state = true;
     UserModel user = _ref.read(userProvider)!;
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       final res = await _storageRepository.storeFile(
         path: 'users/profile',
         id: user.uid,
         file: profileFile,
+        webFile: profileWebFile,
       );
 
       res.fold((l) => showSnackBar(context, l.message),
           (r) => user = user.copyWith(profilePic: r));
     }
 
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       final res = await _storageRepository.storeFile(
         path: 'user/banner',
         id: user.uid,
         file: bannerFile,
+        webFile: bannerWebFile,
       );
 
       res.fold((l) => showSnackBar(context, l.message),
