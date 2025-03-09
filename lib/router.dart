@@ -9,7 +9,7 @@ import 'package:drug_discovery/features/community/screens/mod_tools_screen.dart'
 import 'package:drug_discovery/features/home/screens/home_screen.dart';
 import 'package:drug_discovery/features/posts/screens/add_post_type_screen.dart';
 import 'package:drug_discovery/features/posts/screens/comments_screen.dart';
-import 'package:drug_discovery/features/screens/login_screen.dart';
+import 'package:drug_discovery/features/auth/screens/login_screen.dart';
 import 'package:drug_discovery/features/user_profile/screens/edit_profile_screen.dart';
 import 'package:drug_discovery/features/user_profile/screens/user_profile_screen.dart';
 import 'package:routemaster/routemaster.dart';

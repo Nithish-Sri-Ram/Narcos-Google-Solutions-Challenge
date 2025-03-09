@@ -1,5 +1,7 @@
 import 'package:drug_discovery/core/common/error_text.dart';
 import 'package:drug_discovery/core/common/loader.dart';
+import 'package:drug_discovery/core/common/sign_in_button.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/features/community/controller/community_controller.dart';
 import 'package:drug_discovery/models/community_model.dart';
 import 'package:drug_discovery/theme/pallete.dart';
@@ -20,34 +22,41 @@ class CommunityListDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     return Drawer(
       child: SafeArea(
           child: Column(
         children: [
-          ListTile(
-            title: const Text('Create a community'),
-            leading: const Icon(Icons.add),
-            onTap: () => navigateToCreateCommunity(context),
-          ),
-          ref.watch(userCommunitiesProvider).when(
-              data: (communities) => Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (BuildContext context, int index) {
-                        final community = communities[index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Pallete.whiteColor,
-                            backgroundImage: NetworkImage(community.avatar),
-                          ),
-                          title: Text(community.name),
-                          onTap: () => navigateToCommunity(context, community),
-                        );
-                      },
-                      itemCount: communities.length,
+          isGuest
+              ? const SignInButton()
+              : ListTile(
+                  title: const Text('Create a community'),
+                  leading: const Icon(Icons.add),
+                  onTap: () => navigateToCreateCommunity(context),
+                ),
+          if (!isGuest)
+            ref.watch(userCommunitiesProvider).when(
+                data: (communities) => Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (BuildContext context, int index) {
+                          final community = communities[index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Pallete.whiteColor,
+                              backgroundImage: NetworkImage(community.avatar),
+                            ),
+                            title: Text(community.name),
+                            onTap: () =>
+                                navigateToCommunity(context, community),
+                          );
+                        },
+                        itemCount: communities.length,
+                      ),
                     ),
-                  ),
-              error: (error, stackTrace) => ErrorText(error: error.toString()),
-              loading: () => const Loader())
+                error: (error, stackTrace) =>
+                    ErrorText(error: error.toString()),
+                loading: () => const Loader())
         ],
       )),
     );

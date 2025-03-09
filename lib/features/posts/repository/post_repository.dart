@@ -48,6 +48,16 @@ class PostRepository {
             .toList());
   }
 
+  Stream<List<Post>> fetchGuestPosts() {
+    return _posts
+        .orderBy('createdAt', descending: true)
+        .limit(10)
+        .snapshots()
+        .map((event) => event.docs
+            .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
+            .toList());
+  }
+
   FutureVoid deletePost(Post post) async {
     try {
       return right(_posts.doc(post.id).delete());
@@ -130,9 +140,13 @@ class PostRepository {
 
   FutureVoid awardPost(Post post, String award, String senderId) async {
     try {
-      _posts.doc(post.id).update({'awards': FieldValue.arrayUnion([award])});
+      _posts.doc(post.id).update({
+        'awards': FieldValue.arrayUnion([award])
+      });
       // _users.doc(senderId).update({'awards': FieldValue.arrayRemove([award])});
-      return right(_users.doc(post.uid).update({'awards':FieldValue.arrayUnion([award])}));
+      return right(_users.doc(post.uid).update({
+        'awards': FieldValue.arrayUnion([award])
+      }));
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
