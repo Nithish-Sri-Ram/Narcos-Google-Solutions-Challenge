@@ -1,4 +1,5 @@
 import 'package:drug_discovery/features/feed/feed_screen.dart';
+import 'package:drug_discovery/features/gpt/screens/gpt_screen.dart';
 import 'package:drug_discovery/features/posts/screens/add_post_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class Constants {
 
   static const tabWidgetss = [
     FeedScreen(),
+    GptScreen(),
     AddPostScreen(),
   ];
 

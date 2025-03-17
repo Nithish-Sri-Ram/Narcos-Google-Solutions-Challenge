@@ -1,14 +1,11 @@
 import 'package:drug_discovery/core/constants/constants.dart';
-import 'package:drug_discovery/features/home/delegates/search_community_delegate.dart';
 import 'package:drug_discovery/features/home/drawers/community_list_drawer.dart';
 import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -41,39 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final currentTheme = ref.watch(themeNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-        centerTitle: false,
-        leading: Builder(builder: (context) {
-          return IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => displayDrawer(context),
-          );
-        }),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                  context: context, delegate: SearchCommunityDelegate(ref));
-            },
-            icon: const Icon(Icons.search),
-          ),
-          // if(kIsWeb)
-          IconButton(
-              onPressed: () {
-                Routemaster.of(context).push('/add-post');
-              },
-              icon: const Icon(Icons.add)),
-          Builder(builder: (context) {
-            return IconButton(
-              icon: CircleAvatar(
-                backgroundImage: NetworkImage(user.profilePic),
-              ),
-              onPressed: () => displayEndDrawer(context),
-            );
-          })
-        ],
-      ),
+      // appBar: CustomAppBar(title: 'Home'),
       body: Constants.tabWidgetss[_page],
       drawer: const CommunityListDrawer(),
       endDrawer: isGuest ? null : const ProfileDrawer(),
@@ -81,8 +46,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         activeColor: currentTheme.iconTheme.color,
         backgroundColor: currentTheme.scaffoldBackgroundColor,
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.chat), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.add))
+          BottomNavigationBarItem(icon: Icon(Icons.add)),
         ],
         onTap: onPageChanged,
         currentIndex: _page,

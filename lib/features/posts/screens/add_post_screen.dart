@@ -1,5 +1,8 @@
+import 'package:drug_discovery/core/common/custom_appbar.dart';
+import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
+import 'package:drug_discovery/features/home/drawers/community_list_drawer.dart';
+import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
 import 'package:drug_discovery/theme/pallete.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,11 +17,17 @@ class AddPostScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    final isGuest = user == null || !user.isAuthenticated;
+
     double cardHeightWidth = kIsWeb ? 360 : 120;
     double iconSize = kIsWeb ? 120 : 60;
     final currentTheme = ref.watch(themeNotifierProvider);
 
     return Scaffold(
+      appBar: CustomAppBar(title: 'Add Post'),
+      drawer: const CommunityListDrawer(),
+      endDrawer: isGuest ? null : const ProfileDrawer(),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,

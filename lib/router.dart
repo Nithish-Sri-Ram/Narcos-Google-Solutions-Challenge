@@ -6,6 +6,7 @@ import 'package:drug_discovery/features/community/screens/community_screen.dart'
 import 'package:drug_discovery/features/community/screens/create_community_screen.dart';
 import 'package:drug_discovery/features/community/screens/edit_community_screen.dart';
 import 'package:drug_discovery/features/community/screens/mod_tools_screen.dart';
+import 'package:drug_discovery/features/gpt/screens/gpt_screen.dart';
 import 'package:drug_discovery/features/home/screens/home_screen.dart';
 import 'package:drug_discovery/features/posts/screens/add_post_screen.dart';
 import 'package:drug_discovery/features/posts/screens/add_post_type_screen.dart';
@@ -68,5 +69,6 @@ final loggedInRoute = RouteMap(
     '/add-post': (routeData) => const MaterialPage(
           child: AddPostScreen(),
         ),
+    '/chat': (_) => const MaterialPage(child: GptScreen()),
   },
 );
