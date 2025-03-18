@@ -3,6 +3,8 @@ import 'package:drug_discovery/features/gpt/widgets/check_box_button.dart';
 import 'package:drug_discovery/features/gpt/widgets/search_bar_button.dart';
 import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
+import 'package:drug_discovery/models/chat_model.dart';
+import 'package:drug_discovery/models/message_model.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +20,7 @@ class GptScreen extends ConsumerStatefulWidget {
 class _GptScreenState extends ConsumerState<GptScreen> {
   final TextEditingController _messageController = TextEditingController();
   final List<String> messages = [];
+  final List<String> responses = [];
   String? chatId;
   bool isADMETSelected = false;
   bool isBASelected = false;
@@ -25,37 +28,67 @@ class _GptScreenState extends ConsumerState<GptScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeChat();
+    _setUpChatList();
   }
 
-  Future<void> _initializeChat() async {
+  Future<void> _setUpChatList() async {
     final chatController = ref.read(chatControllerProvider.notifier);
-    final user = ref.read(userProvider);
-    final existingChats = await chatController.getUserChats();
+    final email = ref.read(authRepositoryProvider).getCurrentUserEmail();
+    chatController.getUserChats(email!);
 
-    if (existingChats.isEmpty) {
-      final newChat = NewChatModel(userName: user!.name, title: "New Chat");
-      await chatController.createNewChat(newChat);
-      final updatedChats = await chatController.getUserChats();
-      if (updatedChats.isNotEmpty) {
-        setState(() {
-          chatId = updatedChats.first.chatId;
-        });
-      }
-    } else {
-      setState(() {
-        chatId = existingChats.first.chatId;
-      });
-    }
+    return;
   }
 
-  void sendMessage() {
+  Future<bool> initializeChat(String title) async {
+    final chatController = ref.read(chatControllerProvider.notifier);
+    final email = ref.read(authRepositoryProvider).getCurrentUserEmail();
+
+    if (email == null) {
+      print('Email not available');
+      return false;
+    }
+
+    final newChat = ChatModel(
+      useremail: email,
+      title: title,
+      createdAt: DateTime.now(),
+    );
+    String result = await chatController.createNewChat(newChat);
+    setState(() {
+      chatId = result;
+    });
+    if (result == '') return false;
+
+    return true;
+  }
+
+  void sendMessage() async {
+    final chatController = ref.read(chatControllerProvider.notifier);
+
+    if (chatId == null) {
+      if (_messageController.text.isNotEmpty) {
+        if (await initializeChat(_messageController.text) == false) return;
+      }
+    }
+
     if (_messageController.text.isNotEmpty && chatId != null) {
       setState(() {
         messages.add(_messageController.text);
         _messageController.clear();
       });
-      // Here, you'd send the message to the backend using chatController
+
+      MessageModel message = MessageModel(
+        id: chatId!,
+        chatId: chatId!,
+        role: "user",
+        content: _messageController.text,
+        createdAt: DateTime.now(),
+        mlActivated: false,
+        parameters: {},
+      );
+
+      String res = await chatController.sendChatMessage(message);
+      responses.add(res);
     }
   }
 

@@ -1,4 +1,3 @@
-import 'package:drug_discovery/core/utils.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,39 +19,34 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
   return authController.getUserData(uid);
 });
 
-// Instead of adding a loader directly - I'll add the below way of using the state notifier function
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
-  final Ref _ref;
+
   AuthController({required AuthRepository authRepository, required Ref ref})
       : _authRepository = authRepository,
-        _ref = ref,
-        super(false); //loading=flase
+        super(false);
 
   Stream<User?> get authStateChange => _authRepository.authStateChange;
 
   void signInWithGoogle(BuildContext context, bool isFromLogin) async {
     state = true;
-    final user = await _authRepository.signInWithGoogle(isFromLogin);
+    await _authRepository.signInWithGoogle(isFromLogin);
     state = false;
-    user.fold(
-        (l) => showSnackBar(context, l.message),
-        (userModel) =>
-            _ref.read(userProvider.notifier).update((state) => userModel));
   }
 
   void signInAsGuest(BuildContext context) async {
     state = true;
-    final user = await _authRepository.signInAsGuest();
+    await _authRepository.signInAsGuest();
     state = false;
-    user.fold(
-        (l) => showSnackBar(context, l.message),
-        (userModel) =>
-            _ref.read(userProvider.notifier).update((state) => userModel));
   }
 
   Stream<UserModel> getUserData(String uid) {
     return _authRepository.getUserData(uid);
+  }
+
+  String getCurrentUserEmail() {
+    final email = _authRepository.getCurrentUserEmail();
+    return email!;
   }
 
   void logOut() async {

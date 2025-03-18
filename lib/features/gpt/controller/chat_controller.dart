@@ -1,18 +1,21 @@
 import 'package:drug_discovery/config.dart';
-import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
+import 'package:drug_discovery/models/chat_model.dart';
+import 'package:drug_discovery/models/message_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 final chatControllerProvider =
-    StateNotifierProvider<ChatController, bool>((ref) {
+    StateNotifierProvider<ChatController, List<ChatModel>>((ref) {
   return ChatController();
 });
 
-class ChatController extends StateNotifier<bool> {
-  ChatController() : super(false);
+class ChatController extends StateNotifier<List<ChatModel>> {
+  ChatController() : super([]);
 
-  Future<void> createNewChat(NewChatModel newChat) async {
+  List<ChatModel> cachedChats = [];
+
+  Future<String> createNewChat(ChatModel newChat) async {
     const String url = '$v1/chats';
 
     try {
@@ -20,25 +23,43 @@ class ChatController extends StateNotifier<bool> {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          "username": newChat.userName,
+          "username": newChat.useremail,
           "title": newChat.title,
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        state = true;
+        final responseData = jsonDecode(response.body);
+        final String chatId = responseData["chat_id"];
+
+        ChatModel createdChat = ChatModel(
+          chatId: chatId,
+          title: newChat.title,
+          useremail: newChat.useremail,
+          createdAt: DateTime.now(),
+          lastMessageAt: null,
+          lastMessagePreview: null,
+        );
+
+        cachedChats.insert(0, createdChat);
+        state = List.from(cachedChats);
+
+        return chatId;
       } else {
         throw Exception('Failed to create chat: ${response.body}');
       }
     } catch (e) {
       print('Error creating chat: $e');
-      state = false;
+      return '';
     }
   }
 
-  Future<List<ChatModel>> getUserChats() async {
-    final username = userProvider.name;
-    final String url = '$v1/users/$username/chats';
+  Future<List<ChatModel>> getUserChats(String useremail) async {
+    if (cachedChats.isNotEmpty) {
+      return cachedChats;
+    }
+
+    final String url = '$v1/users/$useremail/chats';
 
     try {
       final response = await http.get(
@@ -51,6 +72,8 @@ class ChatController extends StateNotifier<bool> {
         List<ChatModel> chats = (data['chats'] as List)
             .map((chat) => ChatModel.fromJson(chat))
             .toList();
+        cachedChats = chats;
+        state = chats;
         return chats;
       } else {
         throw Exception('Failed to fetch chats: ${response.body}');
@@ -58,6 +81,32 @@ class ChatController extends StateNotifier<bool> {
     } catch (e) {
       print('Error fetching chats: $e');
       return [];
+    }
+  }
+
+  Future<String> sendChatMessage(MessageModel message) async {
+    const String url = '$v1/chat';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "chat_id": message.chatId,
+          "message": message.content,
+          "ml_activated": message.mlActivated,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        return responseData["response"];
+      } else {
+        throw Exception('Failed to send message: ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending message: $e');
+      return '';
     }
   }
 
@@ -83,76 +132,5 @@ class ChatController extends StateNotifier<bool> {
       print('Error fetching messages: $e');
       return [];
     }
-  }
-}
-
-class NewChatModel {
-  final String userName;
-  final String title;
-
-  NewChatModel({
-    required this.userName,
-    required this.title,
-  });
-}
-
-class ChatModel {
-  final String chatId;
-  final String title;
-  final String username;
-  final DateTime createdAt;
-  final DateTime lastMessageAt;
-  final String lastMessagePreview;
-
-  ChatModel({
-    required this.chatId,
-    required this.title,
-    required this.username,
-    required this.createdAt,
-    required this.lastMessageAt,
-    required this.lastMessagePreview,
-  });
-
-  factory ChatModel.fromJson(Map<String, dynamic> json) {
-    return ChatModel(
-      chatId: json['chat_id'],
-      title: json['title'],
-      username: json['username'],
-      createdAt: DateTime.parse(json['created_at']),
-      lastMessageAt: DateTime.parse(json['last_message_at']),
-      lastMessagePreview: json['last_message_preview'],
-    );
-  }
-}
-
-class MessageModel {
-  final String id;
-  final String chatId;
-  final String role;
-  final String content;
-  final DateTime createdAt;
-  final bool mlActivated;
-  final Map<String, dynamic> parameters;
-
-  MessageModel({
-    required this.id,
-    required this.chatId,
-    required this.role,
-    required this.content,
-    required this.createdAt,
-    required this.mlActivated,
-    required this.parameters,
-  });
-
-  factory MessageModel.fromJson(Map<String, dynamic> json) {
-    return MessageModel(
-      id: json['id'],
-      chatId: json['chat_id'],
-      role: json['role'],
-      content: json['content'],
-      createdAt: DateTime.parse(json['created_at']),
-      mlActivated: json['ml_activated'],
-      parameters: json['parameters'] ?? {},
-    );
   }
 }

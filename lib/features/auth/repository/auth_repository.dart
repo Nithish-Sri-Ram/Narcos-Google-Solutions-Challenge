@@ -131,6 +131,10 @@ class AuthRepository {
     });
   }
 
+  String? getCurrentUserEmail() {
+    return _auth.currentUser?.email;
+  }
+
   void logOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
