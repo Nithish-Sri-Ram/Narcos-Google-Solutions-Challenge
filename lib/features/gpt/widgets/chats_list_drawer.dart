@@ -5,6 +5,8 @@ import 'package:drug_discovery/features/gpt/controller/chat_controller.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:drug_discovery/models/chat_model.dart';
 
 class ChatListDrawer extends ConsumerWidget {
   const ChatListDrawer({super.key});
@@ -26,7 +28,30 @@ class ChatListDrawer extends ConsumerWidget {
                 : ListTile(
                     title: Text('New Chat'),
                     leading: Icon(Icons.chat),
-                    onTap: () {},
+                    onTap: () async {
+                      // Create a new chat
+                      final chatController =
+                          ref.read(chatControllerProvider.notifier);
+                      final email = ref
+                          .read(authRepositoryProvider)
+                          .getCurrentUserEmail();
+                      if (email == null) {
+                        print('Email not available');
+                        return;
+                      }
+
+                      final newChat = ChatModel(
+                        useremail: email,
+                        title: "New Chat",
+                        createdAt: DateTime.now(),
+                      );
+
+                      String chatId =
+                          await chatController.createNewChat(newChat);
+                      if (chatId.isEmpty) return;
+
+                      Routemaster.of(context).push('/chat');
+                    },
                   ),
             if (!isGuest)
               Expanded(
@@ -43,7 +68,7 @@ class ChatListDrawer extends ConsumerWidget {
                             ),
                             title: Text(chat.title),
                             onTap: () {
-                              // You can add navigation or chat details logic here
+                              
                             },
                           );
                         },

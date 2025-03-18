@@ -48,11 +48,15 @@ class _GptScreenState extends ConsumerState<GptScreen> {
       return false;
     }
 
+    String truncatedTitle =
+        title.length > 16 ? title.substring(0, 16) + '...' : title;
+
     final newChat = ChatModel(
       useremail: email,
-      title: title,
+      title: truncatedTitle,
       createdAt: DateTime.now(),
     );
+
     String result = await chatController.createNewChat(newChat);
     setState(() {
       chatId = result;
