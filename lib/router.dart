@@ -71,7 +71,6 @@ final loggedInRoute = RouteMap(
         ),
     '/chat': (route) {
       final chatId = route.queryParameters['chatId'];
-      // Use a key that changes when chatId changes to force rebuild
       return MaterialPage(
         child: GptScreen(chatId: chatId),
         key: ValueKey('chat-${chatId ?? 'new'}'),

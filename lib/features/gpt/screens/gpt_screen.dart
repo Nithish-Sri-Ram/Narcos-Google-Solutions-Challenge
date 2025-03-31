@@ -10,7 +10,6 @@ import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drug_discovery/features/gpt/controller/chat_controller.dart';
-import 'package:routemaster/routemaster.dart';
 
 class GptScreen extends ConsumerStatefulWidget {
   const GptScreen({super.key, this.chatId});
@@ -37,16 +36,17 @@ class _GptScreenState extends ConsumerState<GptScreen> {
     super.initState();
     _setUpChatList();
 
-    // If chatId is passed directly as a widget parameter, use it
-    if (widget.chatId != null) {
+    // Clear messages immediately
+    setState(() {
+      messages.clear();
+      responses.clear();
       chatId = widget.chatId;
+    });
+
+    // If chatId is passed, load that chat's history
+    if (widget.chatId != null) {
       _loadChatHistory(widget.chatId!);
     }
-
-    // Schedule this to run after the first frame is rendered
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkRouteParameters();
-    });
   }
 
   @override
@@ -55,58 +55,18 @@ class _GptScreenState extends ConsumerState<GptScreen> {
   }
 
   @override
-  void didUpdateWidget(GptScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    // If the chatId prop changed, reload
-    if (widget.chatId != oldWidget.chatId) {
-      if (widget.chatId != null) {
-        setState(() {
-          chatId = widget.chatId;
-          messages.clear();
-          responses.clear();
-        });
-        _loadChatHistory(widget.chatId!);
-      } else {
-        setState(() {
-          chatId = null;
-          messages.clear();
-          responses.clear();
-        });
-      }
-    }
-  }
-
-  void _checkRouteParameters() {
-    final routeData = Routemaster.of(context).currentRoute;
-    final params = routeData.queryParameters;
-
-    // Print for debugging
-    print('Current chatId: $chatId');
-    print('Route params chatId: ${params['chatId']}');
-
-    if (params.containsKey('chatId') && params['chatId'] != null) {
-      final routeChatId = params['chatId']!;
-
-      // Only load if it's different from the current chatId
-      if (chatId != routeChatId) {
-        print('Loading new chat: $routeChatId');
-        setState(() {
-          chatId = routeChatId;
-          // Clear messages when changing chats
-          messages.clear();
-          responses.clear();
-        });
-        _loadChatHistory(routeChatId);
-      }
-    } else if (chatId != null) {
-      // If no chatId is provided but we had one before, clear the chat
-      print('Clearing chat');
+    // Listen to the selected chat ID provider
+    final selectedChatId = ref.watch(selectedChatIdProvider);
+    if (selectedChatId != null && selectedChatId != chatId) {
       setState(() {
-        chatId = null;
+        chatId = selectedChatId;
         messages.clear();
         responses.clear();
       });
+      _loadChatHistory(selectedChatId);
     }
   }
 

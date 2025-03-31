@@ -9,6 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final selectedChatIdProvider = StateProvider<String?>((ref) {
+  return null;
+});
+
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -18,6 +22,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _page = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void displayDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
@@ -38,11 +47,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final user = ref.watch(userProvider)!;
     final isGuest = !user.isAuthenticated;
     final currentTheme = ref.watch(themeNotifierProvider);
+    final selectedChatId = ref.watch(selectedChatIdProvider);
+
+    ref.listen(selectedChatIdProvider, (previous, next) {
+      if (next != null && _page != 1) {
+        setState(() {
+          _page = 1; // Switch to chat tab
+        });
+      }
+    });
 
     // Create a list of widgets that can be updated
     final List<Widget> tabWidgets = [
       const FeedScreen(),
-      const GptScreen(),
+      GptScreen(chatId: selectedChatId),
       const AddPostScreen(),
     ];
 

@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drug_discovery/models/chat_model.dart';
 import 'package:routemaster/routemaster.dart';
 
+final selectedChatIdProvider = StateProvider<String?>((ref) => null);
+
 class ChatListDrawer extends ConsumerWidget {
   const ChatListDrawer({super.key});
 
@@ -51,9 +53,14 @@ class ChatListDrawer extends ConsumerWidget {
                       if (chatId.isEmpty) return;
 
                       // Close the drawer
-                      Routemaster.of(context).pop();
+                      Navigator.pop(context);
+
+                      // Invalidate the provider and set it to null for a new chat
+                      ref.invalidate(selectedChatIdProvider);
+                      ref.read(selectedChatIdProvider.notifier).state = null;
+
                       // Replace current screen with new GptScreen
-                      Routemaster.of(context).replace('/chat');
+                      Routemaster.of(context).push('/chat');
                     },
                   ),
             if (!isGuest)
@@ -71,12 +78,16 @@ class ChatListDrawer extends ConsumerWidget {
                             ),
                             title: Text(chat.title),
                             onTap: () {
-                              // Close the drawer
-                              Routemaster.of(context).pop();
+                              Navigator.pop(context);
 
-                              // Replace current screen with GptScreen with chatId
+                              // Invalidate the provider and set the new chat ID
+                              ref.invalidate(selectedChatIdProvider);
+                              ref.read(selectedChatIdProvider.notifier).state =
+                                  chat.chatId;
+
+                              // Replace current screen with GptScreen for the selected chat
                               Routemaster.of(context)
-                                  .replace('/chat?chatId=${chat.chatId}');
+                                  .push('/chat?chatId=${chat.chatId}');
                             },
                           );
                         },
