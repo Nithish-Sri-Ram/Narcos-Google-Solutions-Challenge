@@ -69,6 +69,13 @@ final loggedInRoute = RouteMap(
     '/add-post': (routeData) => const MaterialPage(
           child: AddPostScreen(),
         ),
-    '/chat': (_) => const MaterialPage(child: GptScreen()),
+    '/chat': (route) {
+      final chatId = route.queryParameters['chatId'];
+      // Use a key that changes when chatId changes to force rebuild
+      return MaterialPage(
+        child: GptScreen(chatId: chatId),
+        key: ValueKey('chat-${chatId ?? 'new'}'),
+      );
+    },
   },
 );

@@ -1,7 +1,9 @@
-import 'package:drug_discovery/core/constants/constants.dart';
+import 'package:drug_discovery/features/feed/feed_screen.dart';
+import 'package:drug_discovery/features/gpt/screens/gpt_screen.dart';
 import 'package:drug_discovery/features/home/drawers/community_list_drawer.dart';
 import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
+import 'package:drug_discovery/features/posts/screens/add_post_screen.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +39,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final isGuest = !user.isAuthenticated;
     final currentTheme = ref.watch(themeNotifierProvider);
 
+    // Create a list of widgets that can be updated
+    final List<Widget> tabWidgets = [
+      const FeedScreen(),
+      const GptScreen(),
+      const AddPostScreen(),
+    ];
+
     return Scaffold(
-      body: Constants.tabWidgetss[_page],
+      body: tabWidgets[_page],
       drawer: const CommunityListDrawer(),
       endDrawer: isGuest ? null : const ProfileDrawer(),
       bottomNavigationBar: CupertinoTabBar(

@@ -12,6 +12,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'firebase_options.dart';
 
+class MyRouteObserver extends RoutemasterObserver {
+  @override
+  void didChangeRoute(RouteData routeData, Page page) {
+    // This is called when the route changes
+    print('New route: ${routeData.path}');
+    // You can access query parameters with routeData.queryParameters
+    print('Route params: ${routeData.queryParameters}');
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -28,24 +38,21 @@ void main() async {
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
 }
 
-
-
 class _MyAppState extends ConsumerState<MyApp> {
-
   UserModel? userModel;
 
   void getData(WidgetRef ref, User data) async {
-    userModel = await ref.watch(authControllerProvider.notifier).getUserData(data.uid).first;
-  
-    ref.read(userProvider.notifier).update((state)=> userModel);
-    setState(() {
-      
-    });
+    userModel = await ref
+        .watch(authControllerProvider.notifier)
+        .getUserData(data.uid)
+        .first;
+
+    ref.read(userProvider.notifier).update((state) => userModel);
+    setState(() {});
   }
 
   @override
@@ -55,15 +62,18 @@ class _MyAppState extends ConsumerState<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ref.watch(themeNotifierProvider),
-            routerDelegate: RoutemasterDelegate(routesBuilder: (context) {
-              if (data != null) {
-                getData(ref, data);
-                if(userModel!=null){
-                  return loggedInRoute;
+            routerDelegate: RoutemasterDelegate(
+              observers: [MyRouteObserver()], // Add the observer here
+              routesBuilder: (context) {
+                if (data != null) {
+                  getData(ref, data);
+                  if (userModel != null) {
+                    return loggedInRoute;
+                  }
                 }
-              }
-              return loggedOutRoute;
-            }),
+                return loggedOutRoute;
+              },
+            ),
             routeInformationParser: const RoutemasterParser(),
           ),
           error: (error, stackTrace) => ErrorText(error: error.toString()),

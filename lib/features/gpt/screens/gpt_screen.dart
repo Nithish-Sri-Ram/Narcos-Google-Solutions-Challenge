@@ -36,36 +36,124 @@ class _GptScreenState extends ConsumerState<GptScreen> {
   void initState() {
     super.initState();
     _setUpChatList();
+
+    // If chatId is passed directly as a widget parameter, use it
     if (widget.chatId != null) {
+      chatId = widget.chatId;
       _loadChatHistory(widget.chatId!);
+    }
+
+    // Schedule this to run after the first frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkRouteParameters();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(GptScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // If the chatId prop changed, reload
+    if (widget.chatId != oldWidget.chatId) {
+      if (widget.chatId != null) {
+        setState(() {
+          chatId = widget.chatId;
+          messages.clear();
+          responses.clear();
+        });
+        _loadChatHistory(widget.chatId!);
+      } else {
+        setState(() {
+          chatId = null;
+          messages.clear();
+          responses.clear();
+        });
+      }
+    }
+  }
+
+  void _checkRouteParameters() {
+    final routeData = Routemaster.of(context).currentRoute;
+    final params = routeData.queryParameters;
+
+    // Print for debugging
+    print('Current chatId: $chatId');
+    print('Route params chatId: ${params['chatId']}');
+
+    if (params.containsKey('chatId') && params['chatId'] != null) {
+      final routeChatId = params['chatId']!;
+
+      // Only load if it's different from the current chatId
+      if (chatId != routeChatId) {
+        print('Loading new chat: $routeChatId');
+        setState(() {
+          chatId = routeChatId;
+          // Clear messages when changing chats
+          messages.clear();
+          responses.clear();
+        });
+        _loadChatHistory(routeChatId);
+      }
+    } else if (chatId != null) {
+      // If no chatId is provided but we had one before, clear the chat
+      print('Clearing chat');
+      setState(() {
+        chatId = null;
+        messages.clear();
+        responses.clear();
+      });
     }
   }
 
   Future<void> _loadChatHistory(String chatId) async {
     final chatController = ref.read(chatControllerProvider.notifier);
     setState(() {
-      _isLoading = true;
+      _isLoadingHistory = true;
+      // Clear existing messages when loading a new chat
+      messages.clear();
+      responses.clear();
     });
 
     try {
       final chatMessages = await chatController.getChatMessages(chatId);
-      setState(() {
-        messages.clear();
-        responses.clear();
-        for (var msg in chatMessages) {
+
+      if (chatMessages.isNotEmpty) {
+        // Process messages in pairs to maintain conversation flow
+        for (int i = 0; i < chatMessages.length; i++) {
+          final msg = chatMessages[i];
+
           if (msg.role == "user") {
-            messages.add(msg.content);
-          } else if (msg.role == "assistant") {
-            responses.add(msg.content);
+            setState(() {
+              messages.add(msg.content);
+            });
+
+            // Check if there's a corresponding assistant message
+            if (i + 1 < chatMessages.length &&
+                chatMessages[i + 1].role == "assistant") {
+              setState(() {
+                responses.add(chatMessages[i + 1].content);
+              });
+              i++; // Skip the next message since we've already processed it
+            }
           }
         }
+
+        // Set the chatId
         this.chatId = chatId;
-      });
+
+        // Scroll to bottom after messages are loaded
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+      }
     } catch (e) {
       print('Error loading chat history: $e');
     } finally {
       setState(() {
-        _isLoading = false;
+        _isLoadingHistory = false;
       });
     }
   }
