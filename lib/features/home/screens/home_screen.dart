@@ -38,7 +38,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final currentTheme = ref.watch(themeNotifierProvider);
 
     return Scaffold(
-      // appBar: CustomAppBar(title: 'Home'),
       body: Constants.tabWidgetss[_page],
       drawer: const CommunityListDrawer(),
       endDrawer: isGuest ? null : const ProfileDrawer(),

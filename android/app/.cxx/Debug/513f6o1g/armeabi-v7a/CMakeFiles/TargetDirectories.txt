@@ -1,0 +1,2 @@
+C:/NewVolume/flutter_projects/drug_discovery/android/app/.cxx/Debug/513f6o1g/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/NewVolume/flutter_projects/drug_discovery/android/app/.cxx/Debug/513f6o1g/armeabi-v7a/CMakeFiles/rebuild_cache.dir

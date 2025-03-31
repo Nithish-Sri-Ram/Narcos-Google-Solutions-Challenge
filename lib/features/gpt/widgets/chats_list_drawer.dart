@@ -2,9 +2,11 @@ import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/core/common/sign_in_button.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
 import 'package:drug_discovery/features/gpt/controller/chat_controller.dart';
+import 'package:drug_discovery/features/gpt/screens/gpt_screen.dart';
 import 'package:drug_discovery/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:drug_discovery/models/chat_model.dart';
 
@@ -68,7 +70,11 @@ class ChatListDrawer extends ConsumerWidget {
                             ),
                             title: Text(chat.title),
                             onTap: () {
-                              
+                              PersistentNavBarNavigator.pushNewScreen(
+                                context,
+                                screen: GptScreen(chatId: chat.chatId),
+                                withNavBar: true,
+                              );
                             },
                           );
                         },
