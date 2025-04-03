@@ -133,4 +133,41 @@ class ChatController extends StateNotifier<List<ChatModel>> {
       return [];
     }
   }
+
+  Future<Map<String, String>> fetchChatSummary(String chatId) async {
+    final String url = '$v1/chats/$chatId/summary';
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        String title =
+            data['title'].trim(); // Remove leading/trailing whitespace
+        final String contentWithMarkup = data['content'];
+
+        // Trim title to 30 characters if it exceeds the limit
+        if (title.length > 30) {
+          title = title.substring(0, 30);
+        }
+
+        // Convert content from markup to plain text
+        final String plainTextContent =
+            contentWithMarkup.replaceAll(RegExp(r'<[^>]*>'), '');
+
+        return {'title': title, 'content': plainTextContent};
+      } else {
+        throw Exception('Failed to fetch chat summary: ${response.body}');
+      }
+    } catch (e) {
+      print('Error fetching chat summary: $e');
+      return {
+        'title': '',
+        'content': ''
+      }; // Return empty strings in case of error
+    }
+  }
 }

@@ -14,7 +14,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddPostTypeScreen extends ConsumerStatefulWidget {
   final String type;
-  const AddPostTypeScreen({super.key, required this.type});
+  final String? initialTitle;
+  final String? initialDescription;
+
+  const AddPostTypeScreen({
+    super.key,
+    required this.type,
+    this.initialTitle,
+    this.initialDescription,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -22,13 +30,21 @@ class AddPostTypeScreen extends ConsumerStatefulWidget {
 }
 
 class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  late final TextEditingController titleController;
+  late final TextEditingController descriptionController;
   final linkController = TextEditingController();
   File? bannerFile;
   Uint8List? bannerWebFile;
   List<Community> communities = [];
   Community? selectedCommunity;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.initialTitle);
+    descriptionController =
+        TextEditingController(text: widget.initialDescription);
+  }
 
   @override
   void dispose() {

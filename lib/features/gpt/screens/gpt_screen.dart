@@ -1,9 +1,11 @@
 import 'package:drug_discovery/core/common/loader.dart';
 import 'package:drug_discovery/features/gpt/widgets/chats_list_drawer.dart';
 import 'package:drug_discovery/features/gpt/widgets/check_box_button.dart';
+import 'package:drug_discovery/features/gpt/widgets/publish_to_community_button.dart';
 import 'package:drug_discovery/features/gpt/widgets/search_bar_button.dart';
 import 'package:drug_discovery/features/home/drawers/profile_drawer.dart';
 import 'package:drug_discovery/features/auth/repository/auth_repository.dart';
+import 'package:drug_discovery/features/posts/screens/add_post_type_screen.dart';
 import 'package:drug_discovery/models/chat_model.dart';
 import 'package:drug_discovery/models/message_model.dart';
 import 'package:drug_discovery/theme/pallete.dart';
@@ -475,12 +477,10 @@ class _GptScreenState extends ConsumerState<GptScreen> {
                             },
                           ),
                           Spacer(),
-                          SearchBarButton(
-                            icon: Icons.add_circle_outline_outlined,
-                            text: 'Attach',
-                            onTap: () {
-                              // Handle Attach Button action
-                            },
+                          PublishToCommunityButton(
+                            chatId: chatId,
+                            messages: messages,
+                            responses: responses,
                           ),
                         ],
                       ),
