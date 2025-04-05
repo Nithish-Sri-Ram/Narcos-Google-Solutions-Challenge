@@ -1,0 +1,17 @@
+torch>=1.13.1
+transformers
+pandas
+scipy
+onnxruntime
+numpy>=1.17
+diskcache
+biopython
+rdkit>=2023.9.4
+scikit-learn
+requests
+tqdm
+datasets
+evaluate
+pillow
+huggingface-hub
+accelerate
