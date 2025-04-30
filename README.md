@@ -76,16 +76,14 @@ Our platform focuses on optimizing the drug discovery process by:
 
 
 ---
-
 ## 🎥 Demo
 
 📺 **Application Demo**
 
 Watch the full walkthrough of the Narcos platform in action:
 
-[![Watch Demo](https://img.youtube.com/vi/FUfPeNpOG6Q/0.jpg)](https://www.youtube.com/watch?v=FUfPeNpOG6Q)
+[![Watch Demo](https://github.com/user-attachments/assets/66d90d25-3f4d-4154-a42e-f38d54271324)](https://www.youtube.com/watch?v=FUfPeNpOG6Q)
 
-📸 ![Demo Screenshot]!(https://github.com/user-attachments/assets/66d90d25-3f4d-4154-a42e-f38d54271324)
 
 ---
 
